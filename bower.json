@@ -5,7 +5,7 @@
   "authors": [
     "Axel Navarro <navarroaxel@gmail.com>"
   ],
-  "main": "angular-chrome-storage.js",
+  "main": "iron-chrome-storage.js",
   "keywords": [
     "angular",
     "chrome",
