@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module("chromeStorage",[])
-	.factory('chromeStorage', function($q) {
+angular.module('ironChromeStorage', [])
+	.factory('chromeStorage', ['$q', function($q) {
 	var area = null;
 	try {
 		area = chrome.storage.local; // change this to chrome.storage.sync for sync capabilities
 	} catch (err) {
-		console.log("could not initiate chrome local storage: " + err);
+		console.log('could not initiate chrome local storage: ' + err);
 	}
 
 	/**
@@ -24,17 +24,17 @@ angular.module("chromeStorage",[])
 
 	    area.getBytesInUse(keys, function(bytesInUse) {
 	        if (chrome.runtime.lasterror){
-	        	console.log("error retrieving bytes in use for keys " + keys);
+	        	console.log('error retrieving bytes in use for keys ' + keys);
 	            deferred.reject(chrome.runtime.lasterror.message);
 	        }
 	        else {
-	        	console.log("retrieved bytes in use for keys " + keys + ": " + bytesInUse);
+	        	console.log('retrieved bytes in use for keys ' + keys + ': ' + bytesInUse);
 	            deferred.resolve(bytesInUse);
 	        }
 	    });
 
 	    return deferred.promise;
-	}
+	};
 
    return {
    	getDebuggingTotalBytesInUse: function() {
@@ -47,8 +47,7 @@ angular.module("chromeStorage",[])
 	 * Returns the usage of the current storage quota, as a number between 0.0 and 1.0
 	 */
 	getDebuggingPercentUsed: function() {
-		var percent = totalBytes / area.QUOTA_BYTES;
-		return percent;
+        return totalBytes / area.QUOTA_BYTES;
 	},
 	getDebuggingSizeOf: function(key) {
 		return angular.toJson(cache[key]).length;
@@ -69,7 +68,7 @@ angular.module("chromeStorage",[])
 	},
 	updateDebuggingTotalBytes: function() {
 		getBytesInUse(null).then(function(data) {
-			console.log("total bytes in use: " + data);
+			console.log('total bytes in use: ' + data);
 			totalBytes = data;
 		});
 	},
@@ -77,9 +76,9 @@ angular.module("chromeStorage",[])
 		// console.log('clearing local cache');
 		area.clear(function() {
 			if (chrome.runtime.lastError) {
-		        console.error("error clearing local cache" + chrome.runtime.lastError);
+		        console.error('error clearing local cache' + chrome.runtime.lastError);
 		    } else {
-	    		console.log("cache has been cleared");
+	    		console.log('cache has been cleared');
 	    	}
 		});
 	},
@@ -88,14 +87,14 @@ angular.module("chromeStorage",[])
 			if (chrome.runtime.lasterror){
 	            console.error(chrome.runtime.lasterror.message);
 	        } else {
-	        	// console.log("key " + key + " has been dropped from the storage cache")
+	        	// console.log('key ' + key + ' has been dropped from the storage cache')
 	        }
 		});
 	},
 	get: function(key) {
 		var deferred = $q.defer();
 		area.get(key, function (value) {
-        	// console.log('getTotalBytesInUse then with key ' + key + " : " + angular.toJson(value));
+        	// console.log('getTotalBytesInUse then with key ' + key + ' : ' + angular.toJson(value));
         	var keyValue = value[key];
             deferred.resolve(keyValue);
 		});
@@ -109,20 +108,20 @@ angular.module("chromeStorage",[])
 		// console.log('getOrElse called with  cached key ' + key);
 		var deferred = $q.defer();
         area.get(key, function(value) {
-        	// console.log('getOrElse then with cached key ' + key + " : " + angular.toJson(value));
+        	// console.log('getOrElse then with cached key ' + key + ' : ' + angular.toJson(value));
         	var keyValue = value[key];
         	if (keyValue == undefined || keyValue == null) {
-        		// console.log("no cached value for "+ key + ". using fallback method.");
+        		// console.log('no cached value for '+ key + '. using fallback method.');
         		fallback().then(function(data) {
         			keyValue = data;
-        			// console.log("caching value for "+ key + " : " + angular.toJson(keyValue));
+        			// console.log('caching value for '+ key + ' : ' + angular.toJson(keyValue));
         			var saveObject = {};
         			saveObject[key] = keyValue;
         			area.set(saveObject, function() {
         				if (chrome.runtime.lasterror){
 				            console.error(chrome.runtime.lasterror.message);
 				        } else {
-		    				//console.log('saved ' + keyValue + " to key " + key);
+		    				//console.log('saved ' + keyValue + ' to key ' + key);
 		    			}
         			});
         			deferred.resolve(keyValue);
@@ -143,7 +142,7 @@ angular.module("chromeStorage",[])
 			if (chrome.runtime.lasterror){
 							console.error(chrome.runtime.lasterror.message);
 					} else {
-					// console.log('saved ' + keyValue + " to key " + key);
+					// console.log('saved ' + keyValue + ' to key ' + key);
 				}
 		});
 	},
@@ -156,15 +155,15 @@ angular.module("chromeStorage",[])
 		// console.log('getOrElse called with  cached key ' + key);
 		var deferred = $q.defer();
         fallback().then(function(data) {
-			keyValue = data;
-			// console.log("caching value for "+ key + " : " + angular.toJson(keyValue));
+			var keyValue = data;
+			// console.log('caching value for '+ key + ' : ' + angular.toJson(keyValue));
 			var saveObject = {};
 			saveObject[key] = keyValue;
 			area.set(saveObject, function() {
 				if (chrome.runtime.lasterror){
 		            console.error(chrome.runtime.lasterror.message);
 		        } else {
-    				//console.log('saved ' + keyValue + " to key " + key);
+    				//console.log('saved ' + keyValue + ' to key ' + key);
     			}
 			});
 			deferred.resolve(keyValue);
@@ -179,4 +178,4 @@ angular.module("chromeStorage",[])
 	}
 
    }
-});
+}]);

@@ -1,4 +1,4 @@
-angular-chrome-storage
+iron-chrome-storage
 ============================
 
 A utility resource for accessing [chrome.storage](https://developer.chrome.com/extensions/storage)
@@ -22,18 +22,18 @@ Instructions
 
 Install using bower install
 
-    bower install infomofo/angular-chrome-storage
+    bower install iron-chrome-storage
 
 Add the following script import
 
 ```html
-    <script src="bower_components/angular-chrome-storage/angular-chrome-storage.js"></script>
+    <script src="bower_components/iron-chrome-storage/iron-chrome-storage.js"></script>
 ```
 
 ### Import the chromeStorage module
 
 ```javascript
-angular.module('myapp',['chromeStorage']);
+angular.module('myapp',['ironChromeStorage']);
 ```
 
 ### Usage
