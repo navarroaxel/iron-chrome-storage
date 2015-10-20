@@ -1,6 +1,6 @@
 {
   "name": "iron-chrome-storage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A utility resource for accessing chrome.storage",
   "authors": [
     "Axel Navarro <navarroaxel@gmail.com>"
